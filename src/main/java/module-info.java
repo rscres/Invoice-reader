@@ -8,4 +8,6 @@ module org.jb.invoicereader {
 
     opens org.jb.invoicereader to javafx.fxml;
     exports org.jb.invoicereader;
+    exports org.jb.invoicereader.DataHandlers;
+    opens org.jb.invoicereader.DataHandlers to javafx.fxml;
 }

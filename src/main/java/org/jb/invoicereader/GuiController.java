@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.*;
 
 import java.io.File;
 
@@ -20,8 +21,18 @@ public class GuiController {
     @FXML
     protected void onDragDropped(DragEvent event) {
         Dragboard db = event.getDragboard();
-        File file = db.getFiles().get(0);
-        welcomeText.setText(file.getAbsolutePath());
+        boolean success = false;
+
+        if (db.hasFiles()) {
+            db.getFiles().forEach(file -> {
+                System.out.println("Received file: " + file.getAbsolutePath());
+                welcomeText.setText("Dropped: " + file.getName());
+            });
+            success = true;
+        }
+
+        event.setDropCompleted(success);
+        event.consume();
     }
 
     @FXML
@@ -36,5 +47,17 @@ public class GuiController {
         {
             event.consume();
         }
+    }
+
+    @FXML
+    void onDragEntered(DragEvent event) {
+        VBox vbox = (VBox) event.getSource();
+        vbox.setStyle("-fx-border-color: blue; -fx-background-color: #e6f3ff;");
+    }
+
+    @FXML
+    void onDragExited(DragEvent event) {
+        VBox vbox = (VBox) event.getSource();
+        vbox.setStyle("");
     }
 }
