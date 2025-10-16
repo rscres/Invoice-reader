@@ -10,8 +10,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import org.jb.invoicereader.DataHandlers.DataExtractor;
 
-import java.io.File;
-
 public class GuiController {
     @FXML
     private Label welcomeText;
@@ -19,7 +17,6 @@ public class GuiController {
     private Button createButton;
     @FXML
     private HBox fileInput;
-    private DataExtractor extractor;
 
     @FXML
     protected void onCreateButtonClick() {
@@ -30,7 +27,7 @@ public class GuiController {
     protected void onExtractButtonClick() {
         createButton.setDisable(false);
         TextField text = (TextField) fileInput.getChildren().getFirst();
-        extractor = new DataExtractor(text.getText());
+        DataExtractor extractor = new DataExtractor(text.getText());
     }
 
     @FXML
@@ -42,6 +39,8 @@ public class GuiController {
             db.getFiles().forEach(file -> {
                 System.out.println("Received file: " + file.getAbsolutePath());
                 welcomeText.setText("Dropped: " + file.getName());
+                TextField text = (TextField) fileInput.getChildren().getFirst();
+                text.setText(file.getAbsolutePath());
             });
             success = true;
         }
