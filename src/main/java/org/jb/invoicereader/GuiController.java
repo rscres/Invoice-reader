@@ -8,7 +8,11 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.jb.invoicereader.DataHandlers.DataExtractor;
+
+import java.io.File;
 
 public class GuiController {
     @FXML
@@ -73,5 +77,16 @@ public class GuiController {
     void onDragExited(DragEvent event) {
         VBox vbox = (VBox) event.getSource();
         vbox.setStyle("");
+    }
+
+    @FXML
+    void openFileChooser() {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Escolher fatura");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+        File file = chooser.showOpenDialog(new Stage());
+        if (file == null) return;
+        TextField text = (TextField) fileInput.getChildren().getFirst();
+        text.setText(file.getAbsolutePath());
     }
 }
