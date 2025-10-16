@@ -1,9 +1,7 @@
 package org.jb.invoicereader;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -11,10 +9,25 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.jb.invoicereader.DataHandlers.DataExtractor;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class GuiController {
+    public TextField codProcesso;
+    public TextField cedente;
+    public TextField cnpjCedente;
+    public TextField pagador;
+    public TextField cnpjPagador;
+    public DatePicker emissao;
+    public DatePicker vencimento;
+    public TextField valorTotal;
+    public ComboBox despesa;
+    public TextField codPessoaCedente;
+    public TextField codPessoaPagador;
+    public TextField numFatura;
     @FXML
     private Label welcomeText;
     @FXML
@@ -32,6 +45,20 @@ public class GuiController {
         createButton.setDisable(false);
         TextField text = (TextField) fileInput.getChildren().getFirst();
         DataExtractor extractor = new DataExtractor(text.getText());
+        setProcessedData(extractor.getProcessedData());
+    }
+    
+    private void setProcessedData(ObjectNode data) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        cedente.setText(data.get("CEDENTE").asString(null));
+        cnpjCedente.setText(data.get("CNPJ").asString(null));
+        pagador.setText(data.get("PAGADOR").asString(null));
+        cnpjPagador.setText(data.get("CNPJ_PAGADOR").asString(null));
+        emissao.setValue(LocalDate.parse(data.get("EMISSAO").asString(null), formatter));
+        vencimento.setValue(LocalDate.parse(data.get("VENCIMENTO").asString(null), formatter));
+        valorTotal.setText(data.get("VALOR_TOTAL").asString(null));
+        codPessoaCedente.setText(data.get("COD_PESSOA_CEDENTE").asString(null));
+        codPessoaPagador.setText(data.get("COD_PESSOA_PAGADOR").asString(null));
     }
 
     @FXML
