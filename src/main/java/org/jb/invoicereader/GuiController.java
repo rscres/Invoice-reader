@@ -1,21 +1,36 @@
 package org.jb.invoicereader;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import org.jb.invoicereader.DataHandlers.DataExtractor;
 
 import java.io.File;
 
 public class GuiController {
     @FXML
     private Label welcomeText;
+    @FXML
+    private Button createButton;
+    @FXML
+    private HBox fileInput;
+    private DataExtractor extractor;
 
     @FXML
-    protected void onHelloButtonClick() {
+    protected void onCreateButtonClick() {
         welcomeText.setText("Welcome to JavaFX Application!");
+    }
+
+    @FXML
+    protected void onExtractButtonClick() {
+        createButton.setDisable(false);
+        TextField text = (TextField) fileInput.getChildren().getFirst();
+        extractor = new DataExtractor(text.getText());
     }
 
     @FXML
