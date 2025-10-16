@@ -59,6 +59,7 @@ public class GuiController {
         valorTotal.setText(data.get("VALOR_TOTAL").asString(null));
         codPessoaCedente.setText(data.get("COD_PESSOA_CEDENTE").asString(null));
         codPessoaPagador.setText(data.get("COD_PESSOA_PAGADOR").asString(null));
+        numFatura.setText(data.get("NUM_DOCUMENTO").asString(null));
     }
 
     @FXML
