@@ -6,6 +6,7 @@ module org.jb.invoicereader {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
     requires tools.jackson.databind;
+    requires java.net.http;
 
     opens org.jb.invoicereader to javafx.fxml;
     exports org.jb.invoicereader;
