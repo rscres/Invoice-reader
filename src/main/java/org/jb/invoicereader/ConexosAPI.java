@@ -22,6 +22,7 @@ public enum ConexosAPI {
     private String PWD;
     private HttpRequest.Builder _builder;
     private final HttpClient client;
+    private String baseUrl;
 
     ConexosAPI() {
         CookieManager cookieManager = new CookieManager();
@@ -46,6 +47,7 @@ public enum ConexosAPI {
             JsonNode data = mapper.readTree(Paths.get("src/main/resources/config.json").toFile());
             USR = String.valueOf(data.get("conexos").get("usuario")).replaceAll("\"", "");
             PWD = String.valueOf(data.get("conexos").get("senha")).replaceAll("\"", "");
+            baseUrl = String.valueOf(data.get("conexos").get("base_url")).replaceAll("\"", "");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,7 +59,7 @@ public enum ConexosAPI {
         String requestBody = "{\"username\":\"" + USR + "\",\"password\":\"" + PWD + "\"}";
         System.out.println("Fazendo login/api");
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://jb-logistics.conexos.cloud/api/login"))
+                .uri(URI.create(baseUrl +  "login"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
@@ -110,7 +112,7 @@ public enum ConexosAPI {
                 "\"sessionToKill\": \"" + sessionId + "\"}";
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://jb-logistics.conexos.cloud/api/login"))
+                .uri(URI.create(baseUrl + "login"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody2))
                 .build();
@@ -132,7 +134,7 @@ public enum ConexosAPI {
 
     private HttpRequest GetRequest(String uri) {
         HttpRequest request = _builder
-                .uri(URI.create(uri))
+                .uri(URI.create(baseUrl + uri))
                 .GET()
                 .build();
         return request;
@@ -140,7 +142,7 @@ public enum ConexosAPI {
 
     private HttpRequest PostRequest(String uri, String body) {
         HttpRequest request = _builder
-                .uri(URI.create(uri))
+                .uri(URI.create(baseUrl + uri))
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
         return request;
@@ -148,7 +150,7 @@ public enum ConexosAPI {
 
     private HttpRequest PutRequest(String uri, String body) {
         HttpRequest request = _builder
-                .uri(URI.create(uri))
+                .uri(URI.create(baseUrl + uri))
                 .PUT(HttpRequest.BodyPublishers.ofString(body))
                 .build();
         return request;
