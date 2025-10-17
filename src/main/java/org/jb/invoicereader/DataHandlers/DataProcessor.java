@@ -1,13 +1,15 @@
 package org.jb.invoicereader.DataHandlers;
 
 import tools.jackson.core.*;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ObjectNode;
 
 public class DataProcessor {
     private final ObjectNode data;
 
-    public DataProcessor() {
+    public DataProcessor(JsonNode extracted_data) {
+        System.out.println(extracted_data);
         data = JsonMapper.shared().createObjectNode();
         data.put("CEDENTE","MULTILOG BRASIL S.A.")
             .put("CNPJ","60.526.977/0019-06")

@@ -12,6 +12,7 @@ import org.jb.invoicereader.DataHandlers.DataExtractor;
 import tools.jackson.databind.node.ObjectNode;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -41,7 +42,7 @@ public class GuiController {
     }
 
     @FXML
-    protected void onExtractButtonClick() {
+    protected void onExtractButtonClick() throws IOException {
         createButton.setDisable(false);
         TextField text = (TextField) fileInput.getChildren().getFirst();
         DataExtractor extractor = new DataExtractor(text.getText());
