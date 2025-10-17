@@ -39,12 +39,6 @@ public class GuiController {
     @FXML
     protected void onCreateButtonClick() {
         welcomeText.setText("Welcome to JavaFX Application!");
-        try {
-            ConexosAPI conexos = new ConexosAPI();
-        } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Erro ao criar despesa:\n" + e, ButtonType.OK);
-            alert.showAndWait();
-        }
     }
 
     @FXML
