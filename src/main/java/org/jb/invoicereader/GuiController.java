@@ -9,6 +9,7 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.jb.invoicereader.DataHandlers.DataExtractor;
+import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 
 import java.io.File;
@@ -39,6 +40,17 @@ public class GuiController {
     @FXML
     protected void onCreateButtonClick() {
         welcomeText.setText("Welcome to JavaFX Application!");
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode data = mapper.createObjectNode();
+        data.put("CEDENTE", cedente.getText())
+                .put("CNPJ", cnpjCedente.getText())
+                .put("EMISSAO", String.valueOf(emissao))
+                .put("VENCIMENTO", String.valueOf(vencimento))
+                .put("VALOR_TOTAL", valorTotal.getText())
+                .put("COD_PESSOA_CEDENTE", codPessoaCedente.getText())
+                .put("NUM_DOCUMENTO", numFatura.getText());
+        new CreateExpense(data);
     }
 
     @FXML
