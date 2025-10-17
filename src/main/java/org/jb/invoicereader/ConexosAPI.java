@@ -15,20 +15,29 @@ import java.net.http.HttpResponse;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class ConexosAPI {
+public enum ConexosAPI {
+    INSTANCE;
+
     private String USR;
     private String PWD;
     private HttpRequest.Builder _builder;
     private final HttpClient client;
 
-    public ConexosAPI() throws IOException, InterruptedException {
+    ConexosAPI() {
         CookieManager cookieManager = new CookieManager();
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         CookieHandler.setDefault(cookieManager);
         client = HttpClient.newHttpClient();
-        getConfig();
-        System.out.println(USR + " " + PWD);
-        login();
+        try {
+            getConfig();
+            login();
+        } catch (Exception e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
+
+    public static ConexosAPI getInstance() {
+        return INSTANCE;
     }
 
     private void getConfig() {
