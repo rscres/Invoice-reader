@@ -7,6 +7,8 @@ module org.jb.invoicereader {
     requires org.kordamp.bootstrapfx.core;
     requires tools.jackson.databind;
     requires java.net.http;
+    requires java.sql;
+    requires org.xerial.sqlitejdbc;
 
     opens org.jb.invoicereader to javafx.fxml;
     exports org.jb.invoicereader;
