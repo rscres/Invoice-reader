@@ -39,26 +39,33 @@ public class GuiController {
 
     @FXML
     protected void onCreateButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode data = mapper.createObjectNode();
         data.put("CEDENTE", cedente.getText())
                 .put("CNPJ", cnpjCedente.getText())
-                .put("EMISSAO", String.valueOf(emissao))
-                .put("VENCIMENTO", String.valueOf(vencimento))
+                .put("EMISSAO", String.valueOf(emissao.getValue()))
+                .put("VENCIMENTO", String.valueOf(vencimento.getValue()))
                 .put("VALOR_TOTAL", valorTotal.getText())
                 .put("COD_PESSOA_CEDENTE", codPessoaCedente.getText())
                 .put("NUM_DOCUMENTO", numFatura.getText());
-        new CreateExpense(data);
+        try {
+            new CreateExpense(data);
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Erro ao criar a despesa:\n" + e, ButtonType.OK);
+        }
     }
 
     @FXML
-    protected void onExtractButtonClick() throws IOException {
-        createButton.setDisable(false);
+    protected void onExtractButtonClick() {
         TextField text = (TextField) fileInput.getChildren().getFirst();
-        DataExtractor extractor = new DataExtractor(text.getText());
-        setProcessedData(extractor.getProcessedData());
+        if (text.getText().isEmpty()) return;
+        try {
+            DataExtractor extractor = new DataExtractor(text.getText());
+            setProcessedData(extractor.getProcessedData());
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Erro ao extrair os dados do pdf:\n" + e, ButtonType.OK);
+        }
+
     }
     
     private void setProcessedData(ObjectNode data) {
