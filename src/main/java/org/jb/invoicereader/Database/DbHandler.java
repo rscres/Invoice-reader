@@ -113,7 +113,10 @@ public enum DbHandler {
     }
 
     public String getLastPessoa() throws SQLException {
-        String sql = "SELECT MAX(pesCod) AS last FROM pessoas";
+        String sql = "SELECT CAST(pesCod AS INTEGER) as last\n" +
+                "FROM pessoas\n" +
+                "ORDER BY last DESC\n" +
+                "LIMIT 1;";
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
         if (rs.next()) {

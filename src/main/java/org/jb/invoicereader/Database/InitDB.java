@@ -64,7 +64,6 @@ public class InitDB {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode json = mapper.readTree(response.body());
             JsonNode rows = json.get("rows");
-            String lastProcess = db.getLastPessoa();
             for (JsonNode row : rows) {
                 System.out.println(row);
                 String pesCod = String.valueOf(row.get("pesCod"));
@@ -81,7 +80,7 @@ public class InitDB {
         }
     }
 
-    private String getEndCod(String pesCod) throws IOException, InterruptedException {
+    String getEndCod(String pesCod) throws IOException, InterruptedException {
         ConexosAPI conexos = ConexosAPI.getInstance();
 
         HttpResponse<String> response = conexos.PostRequest("cmn025/endPessoas/list", "{\n" +
@@ -107,7 +106,7 @@ public class InitDB {
         return endCod;
     }
 
-    private String getDocFederal(String pesCod) throws IOException, InterruptedException {
+    String getDocFederal(String pesCod) throws IOException, InterruptedException {
         ConexosAPI conexos = ConexosAPI.getInstance();
 
         HttpResponse<String> response = conexos.PostRequest("cmn025/endPessoas/list", "{\n" +
