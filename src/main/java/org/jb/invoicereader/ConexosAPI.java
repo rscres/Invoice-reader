@@ -55,7 +55,7 @@ public enum ConexosAPI {
 
     //---------------LOGIN FUNCTIONS---------------
 
-    public boolean login() throws IOException, InterruptedException {
+    private boolean login() throws IOException, InterruptedException {
         String requestBody = "{\"username\":\"" + USR + "\",\"password\":\"" + PWD + "\"}";
         System.out.println("Fazendo login/api");
         HttpRequest request = HttpRequest.newBuilder()
@@ -132,28 +132,45 @@ public enum ConexosAPI {
     //---------------END OF LOGIN FUNCTIONS---------------
     //---------------REQUEST HELPER FUNCTIONS-------------
 
-    private HttpRequest GetRequest(String uri) {
+    public HttpResponse<String> GetRequest(String uri) throws IOException, InterruptedException {
         HttpRequest request = _builder
                 .uri(URI.create(baseUrl + uri))
                 .GET()
                 .build();
-        return request;
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 401) {
+            login();
+            response = GetRequest(uri);
+        } else if (response.statusCode() != 200) {
+            return null;
+        }
+        return response;
     }
 
-    private HttpRequest PostRequest(String uri, String body) {
+    public HttpResponse<String> PostRequest(String uri, String body) throws IOException, InterruptedException {
         HttpRequest request = _builder
                 .uri(URI.create(baseUrl + uri))
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
-        return request;
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 401) {
+            login();
+            response = PostRequest(uri, body);
+        }
+        return response;
     }
 
-    private HttpRequest PutRequest(String uri, String body) {
+    public HttpResponse<String> PutRequest(String uri, String body) throws IOException, InterruptedException {
         HttpRequest request = _builder
                 .uri(URI.create(baseUrl + uri))
                 .PUT(HttpRequest.BodyPublishers.ofString(body))
                 .build();
-        return request;
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 401) {
+            login();
+            response = PutRequest(uri, body);
+        }
+        return response;
     }
 
     //---------------END OF REQUEST HELPER FUNCTIONS-------------
