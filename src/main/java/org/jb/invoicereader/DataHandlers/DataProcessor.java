@@ -1,11 +1,13 @@
 package org.jb.invoicereader.DataHandlers;
 
+import org.jb.invoicereader.DbHandler;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ObjectNode;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,7 @@ import java.util.Objects;
 public class DataProcessor {
     private final ObjectNode data;
 
-    public DataProcessor(JsonNode extracted_data) {
+    public DataProcessor(JsonNode extracted_data) throws SQLException {
         System.out.println(extracted_data);
 //        System.out.println(extracted_data.get("CEDENTE").get(0));
         data = JsonMapper.shared().createObjectNode();
@@ -28,17 +30,18 @@ public class DataProcessor {
 //            .put("COD_PESSOA_CEDENTE", "7473")
 //            .put("COD_PESSOA_PAGADOR", "8000")
 //            .putNull("CNPJ_PAGADOR");
-        checkValorTotal(extracted_data.get("VALOR_TOTAL"));
+        String cnpj = checkField(extracted_data.get("CNPJ"));
+        String cnpj_pagador = checkField(extracted_data.get("CNPJ_PAGADOR"));
         data.put("CEDENTE",checkField(extracted_data.get("CEDENTE")))
-                .put("CNPJ",checkField(extracted_data.get("CNPJ")))
+                .put("CNPJ",cnpj)
                 .put("NUM_DOCUMENTO",checkField(extracted_data.get("NUM_DOCUMENTO")))
                 .put("VENCIMENTO",checkField(extracted_data.get("VENCIMENTO")))
                 .put("EMISSAO",checkField(extracted_data.get("EMISSAO")))
                 .put("PAGADOR",checkField(extracted_data.get("PAGADOR")))
                 .put("VALOR_TOTAL",checkValorTotal(extracted_data.get("VALOR_TOTAL")))
-                .put("COD_PESSOA_CEDENTE", "7473")
-                .put("COD_PESSOA_PAGADOR", "8000")
-                .putNull("CNPJ_PAGADOR");
+                .put("COD_PESSOA_CEDENTE", fetchCodPessoa(cnpj))
+                .put("COD_PESSOA_PAGADOR", fetchCodPessoa(cnpj_pagador))
+                .put("CNPJ_PAGADOR", cnpj_pagador);
     }
 
     public ObjectNode getData() {
@@ -46,6 +49,7 @@ public class DataProcessor {
     }
 
     private String checkField(JsonNode data) {
+        if (data == null) return null;
         ObjectMapper mapper = new ObjectMapper();
         List<String> dataList = mapper.convertValue(data, new TypeReference<>() {});
         if (dataList.size() == 1 || dataList.stream().allMatch(element -> Objects.equals(dataList.getFirst(), element))) {
@@ -87,8 +91,20 @@ public class DataProcessor {
         return formattedDefault;
     }
 
-    private String fetchCodPessoa(String cnpj) {
-
-        return null;
+    private String fetchCodPessoa(String cnpj) throws SQLException {
+        if (cnpj == null) return null;
+        System.out.println(cnpj);
+        DbHandler dbHandler = DbHandler.getInstance();
+        String formattedCnpj = cnpj.replaceAll("\\.", "")
+                .replaceAll("/", "")
+                .replaceAll("-", "");
+        String pesCod = dbHandler.getPesCod(formattedCnpj);
+        System.out.println(pesCod);
+        if (pesCod == null) {
+            System.out.println(formattedCnpj.substring(0, 8));
+            pesCod = dbHandler.getPesCod(formattedCnpj.substring(0, 8));
+        }
+        System.out.println(pesCod);
+        return pesCod;
     }
 }

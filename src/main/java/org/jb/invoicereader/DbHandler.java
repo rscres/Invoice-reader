@@ -192,10 +192,13 @@ public enum DbHandler {
     }
 
     public String getPesCod(String cnpj) throws SQLException {
-        String sql = "SELECT pesCod from pessoas WHERE docFederal = ?";
+        String sql = "SELECT pesCod from pessoas WHERE docFederal LIKE ?";
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, cnpj);
+        System.out.println(pstmt);
+        pstmt.setString(1, "%" + cnpj + "%");
+        System.out.println(pstmt);
         ResultSet rs = pstmt.executeQuery();
+
         if (rs.next()) {
             return rs.getString("pesCod");
         }

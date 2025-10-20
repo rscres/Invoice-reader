@@ -7,11 +7,12 @@ import tools.jackson.databind.node.ObjectNode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 
 public class DataExtractor {
     DataProcessor processor;
 
-    public DataExtractor(String filePath) throws IOException {
+    public DataExtractor(String filePath) throws IOException, SQLException {
 
         System.out.println(filePath);
         ProcessBuilder pb = new ProcessBuilder("bash", "-c", "source /home/renato/Documents/Code/Invoice-extractor/.venv/bin/activate && python /home/renato/Documents/Code/Invoice-extractor/test.py '" + filePath + "'");
