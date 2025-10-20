@@ -1,11 +1,10 @@
 package org.jb.invoicereader;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.input.DragEvent;
 import javafx.stage.Stage;
+import org.jb.invoicereader.Database.UpdateDB;
 
 import java.io.IOException;
 
@@ -22,7 +21,7 @@ public class Main extends Application {
     public static void main(String[] args) {
         try {
             ConexosAPI conexosAPI = ConexosAPI.getInstance();
-            DbHandler dbHandler = DbHandler.getInstance();
+            new UpdateDB();
         } catch (Exception e) {
             e.printStackTrace();
         }

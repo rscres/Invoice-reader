@@ -1,6 +1,6 @@
 package org.jb.invoicereader.DataHandlers;
 
-import org.jb.invoicereader.DbHandler;
+import org.jb.invoicereader.Database.DbHandler;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
