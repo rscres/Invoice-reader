@@ -124,4 +124,14 @@ public enum DbHandler {
         }
         return null;
     }
+
+    public void setDespesaRow(String key, String... data) throws SQLException {
+        String sql = "INSERT OR IGNORE INTO despesas (ctpEspConta, ctpCod, descricao, prjCod) VALUES (?,?,?,?)";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, key);
+        pstmt.setString(2, data[0]);
+        pstmt.setString(3, data[1]);
+        pstmt.setString(4, data[2]);
+        pstmt.executeUpdate();
+    }
 }

@@ -20,9 +20,10 @@ public class InitDB {
                 "docFederal",
                 "dtaValidade");
         db.createTable("despesas",
-                "ctpCod",
+                "ctpEspConta",
                 "descricao",
-                "prjCod");
+                "prjCod",
+                "ctpCod");
         if (db.isTableEmpty("pessoas")) populatePessoasTable();
         if (db.isTableEmpty("despesas")) populateDespesasTable();
     }
@@ -139,7 +140,44 @@ public class InitDB {
         return docFederal;
     }
 
-    private void populateDespesasTable() {
+    private void populateDespesasTable() throws IOException, InterruptedException, SQLException {
         System.out.println("Populate despesas");
+        ConexosAPI conexos = ConexosAPI.getInstance();
+        for (int i = 1; i <= 4; i++) {
+            int pageNum = 1;
+            boolean finished = false;
+            while (!finished) {
+                finished = true;
+                HttpResponse<String> response = conexos.PostRequest("lov/ContasProjetoAtivasProcessoNullable", "{\n" +
+                        "    \"fieldList\": [\n" +
+                        "        \"ctpDesNome\",\n" +
+                        "        \"ctpEspConta\"\n" +
+                        "    ],\n" +
+                        "    \"filterList\": {\n" +
+                        "        \"prjCod\": " + i + ",\n" +
+                        "        \"ctpVldUso\": 2,\n" +
+                        "        \"filCod\": \"1\",\n" +
+                        "        \"priCod\": \"6500\"\n" +
+                        "    },\n" +
+                        "    \"pageNumber\": " + pageNum++ + ",\n" +
+                        "    \"orderBy\": \"asc\",\n" +
+                        "    \"sortBy\": \"ctpCod\"\n" +
+                        "}");
+                if (response.statusCode() != 200) return;
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode json = mapper.readTree(response.body());
+                System.out.println(response.body());
+                JsonNode rows = json.get("rows");
+                for (JsonNode row: rows) {
+                    System.out.println(row);
+                    finished = false;
+                    String ctpEspConta = String.valueOf(row.get("ctpEspConta"));
+                    String prjCod = String.valueOf(i);
+                    String descricao = String.valueOf(row.get("ctpDesNome"));
+                    String ctpCod = String.valueOf(row.get("ctpCod"));
+                    db.setDespesaRow(ctpEspConta, ctpCod, descricao, prjCod);
+                }
+            }
+        }
     }
 }
