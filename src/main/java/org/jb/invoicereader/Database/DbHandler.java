@@ -38,9 +38,9 @@ public enum DbHandler {
         return conn;
     }
 
-    public void createTable(String tableName, String primaryKey, String... columns) throws SQLException {
+    public void createTable(String tableName, String keyType, String primaryKey, String... columns) throws SQLException {
         StringBuilder sql = new StringBuilder("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                + primaryKey + " TEXT PRIMARY KEY DEFAULT '',");
+                + primaryKey + " " + keyType + " PRIMARY KEY DEFAULT '',");
 
         for (String column : columns) {
             sql.append(column).append(" TEXT DEFAULT '',");
@@ -125,13 +125,14 @@ public enum DbHandler {
         return null;
     }
 
-    public void setDespesaRow(String key, String... data) throws SQLException {
-        String sql = "INSERT OR IGNORE INTO despesas (ctpEspConta, ctpCod, descricao, prjCod) VALUES (?,?,?,?)";
+    public void setDespesaRow(Integer key, String... data) throws SQLException {
+        String sql = "INSERT OR IGNORE INTO despesas (id, ctpEspConta, ctpCod, descricao, prjCod) VALUES (?,?,?,?,?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, key);
+        pstmt.setInt(1, key);
         pstmt.setString(2, data[0]);
         pstmt.setString(3, data[1]);
         pstmt.setString(4, data[2]);
+        pstmt.setString(5, data[3]);
         pstmt.executeUpdate();
     }
 }

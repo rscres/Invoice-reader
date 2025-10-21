@@ -14,12 +14,15 @@ public class InitDB {
     public InitDB() throws SQLException, IOException, InterruptedException {
         db = DbHandler.getInstance();
         db.createTable("pessoas",
+                "TEXT",
                 "pesCod",
                 "descricao",
                 "endCod",
                 "docFederal",
                 "dtaValidade");
         db.createTable("despesas",
+                "INTEGER",
+                "id",
                 "ctpEspConta",
                 "descricao",
                 "prjCod",
@@ -143,6 +146,7 @@ public class InitDB {
     private void populateDespesasTable() throws IOException, InterruptedException, SQLException {
         System.out.println("Populate despesas");
         ConexosAPI conexos = ConexosAPI.getInstance();
+        int id = 1;
         for (int i = 1; i <= 4; i++) {
             int pageNum = 1;
             boolean finished = false;
@@ -169,13 +173,12 @@ public class InitDB {
                 System.out.println(response.body());
                 JsonNode rows = json.get("rows");
                 for (JsonNode row: rows) {
-                    System.out.println(row);
                     finished = false;
                     String ctpEspConta = String.valueOf(row.get("ctpEspConta"));
                     String prjCod = String.valueOf(i);
                     String descricao = String.valueOf(row.get("ctpDesNome"));
                     String ctpCod = String.valueOf(row.get("ctpCod"));
-                    db.setDespesaRow(ctpEspConta, ctpCod, descricao, prjCod);
+                    db.setDespesaRow(id++, ctpEspConta, ctpCod, descricao, prjCod);
                 }
             }
         }
