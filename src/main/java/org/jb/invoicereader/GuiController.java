@@ -9,13 +9,15 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.jb.invoicereader.DataHandlers.DataExtractor;
+import org.jb.invoicereader.Database.DbHandler;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 
 import java.io.File;
-import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class GuiController {
     public TextField codProcesso;
@@ -26,7 +28,7 @@ public class GuiController {
     public DatePicker emissao;
     public DatePicker vencimento;
     public TextField valorTotal;
-    public ComboBox despesa;
+    public ComboBox<String> despesa;
     public TextField codPessoaCedente;
     public TextField codPessoaPagador;
     public TextField numFatura;
@@ -36,6 +38,20 @@ public class GuiController {
     private Button createButton;
     @FXML
     private HBox fileInput;
+
+    @FXML
+    private void initialize() {
+        DbHandler db = DbHandler.getInstance();
+        ArrayList<String[]> despesas = null;
+        try {
+            despesas = db.getDespesas();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        for (String[] row : despesas) {
+            despesa.getItems().add(row[0]);
+        }
+    }
 
     @FXML
     protected void onCreateButtonClick() {
@@ -137,4 +153,5 @@ public class GuiController {
         TextField text = (TextField) fileInput.getChildren().getFirst();
         text.setText(file.getAbsolutePath());
     }
+
 }
