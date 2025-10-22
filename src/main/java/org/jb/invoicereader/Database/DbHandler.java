@@ -103,6 +103,12 @@ public enum DbHandler {
         return null;
     }
 
+    public boolean tableExists(String tableName) throws SQLException {
+        DatabaseMetaData dbm = conn.getMetaData();
+        ResultSet tables = dbm.getTables(null, null, tableName, null);
+        return tables.next();
+    }
+
     public boolean isTableEmpty(String tableName) throws SQLException {
         String sql = "SELECT COUNT(*) FROM " + tableName;
         Statement stmt = conn.createStatement();

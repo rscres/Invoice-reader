@@ -16,7 +16,8 @@ public class UpdateDB {
     public UpdateDB() throws SQLException, IOException, InterruptedException {
         db = DbHandler.getInstance();
 
-        if (checkIfDbExists() == false || db.isTableEmpty("pessoas") || db.isTableEmpty("despesas")) {
+        if (!checkIfDbExists() || !db.tableExists("pessoas") || !db.tableExists("despesas") ||
+                db.isTableEmpty("pessoas") || db.isTableEmpty("despesas")) {
             InitDB initialiazer = new InitDB();
         }
         updatePessoasTable();
