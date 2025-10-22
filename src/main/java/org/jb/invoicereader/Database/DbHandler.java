@@ -5,6 +5,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.nio.file.Paths;
 import java.sql.*;
+import java.util.ArrayList;
 
 public enum DbHandler {
     INSTANCE;
@@ -134,5 +135,20 @@ public enum DbHandler {
         pstmt.setString(4, data[2]);
         pstmt.setString(5, data[3]);
         pstmt.executeUpdate();
+    }
+
+    public ArrayList<String[]> getDespesas() throws SQLException {
+        String sql = "SELECT prjCod, ctpCod, descricao FROM despesas";
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        ArrayList<String[]> despesas = new ArrayList<>();
+        while (rs.next()) {
+            String[] row = new String[3];
+            row[0] = rs.getString("descricao");
+            row[1] = rs.getString("prjCod");
+            row[2] = rs.getString("ctpCod");
+            despesas.add(row);
+        }
+        return despesas;
     }
 }
