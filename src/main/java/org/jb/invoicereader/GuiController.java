@@ -32,24 +32,37 @@ public class GuiController {
     public TextField codPessoaCedente;
     public TextField codPessoaPagador;
     public TextField numFatura;
+    public ChoiceBox<String> projeto;
     @FXML
     private Label welcomeText;
     @FXML
     private Button createButton;
     @FXML
     private HBox fileInput;
+    ArrayList<String[]> despesasList;
 
     @FXML
     private void initialize() {
         DbHandler db = DbHandler.getInstance();
-        ArrayList<String[]> despesas = null;
+        despesasList = null;
         try {
-            despesas = db.getDespesas();
+            despesasList = db.getDespesas();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        for (String[] row : despesas) {
+        for (String[] row : despesasList) {
             despesa.getItems().add(row[0]);
+        }
+        projeto.getItems().addAll("1", "3", "4");
+    }
+
+    @FXML
+    protected void onProjetoSelection() {
+        String selectedProjeto = projeto.getValue();
+        despesa.getItems().clear();
+        for (String[] row : despesasList) {
+            if (row[1].equals(selectedProjeto))
+                despesa.getItems().add(row[0]);
         }
     }
 
