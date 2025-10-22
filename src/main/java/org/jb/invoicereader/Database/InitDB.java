@@ -76,7 +76,7 @@ public class InitDB {
                 String endCod = getEndCod(pesCod);
                 String docFederal = getDocFederal(pesCod);
                 String dtaValidade = String.valueOf(row.get("dpeDtaValidade"));
-                String descricao = String.valueOf(row.get("dpeNomFantasia"));
+                String descricao = String.valueOf(row.get("dpeNomFantasia")).replaceAll("\"", "");
                 if (pesCod.isEmpty() || endCod == null || docFederal == null
                         || dtaValidade.isEmpty() || descricao.isEmpty()) continue;
                 db.setPessoaRow(pesCod, descricao, endCod, docFederal, dtaValidade);
@@ -174,9 +174,9 @@ public class InitDB {
                 JsonNode rows = json.get("rows");
                 for (JsonNode row: rows) {
                     finished = false;
-                    String ctpEspConta = String.valueOf(row.get("ctpEspConta"));
+                    String ctpEspConta = String.valueOf(row.get("ctpEspConta")).replaceAll("\"", "");
                     String prjCod = String.valueOf(i);
-                    String descricao = String.valueOf(row.get("ctpDesNome"));
+                    String descricao = String.valueOf(row.get("ctpDesNome")).replaceAll("\"", "");
                     String ctpCod = String.valueOf(row.get("ctpCod"));
                     db.setDespesaRow(id++, ctpEspConta, ctpCod, descricao, prjCod);
                 }

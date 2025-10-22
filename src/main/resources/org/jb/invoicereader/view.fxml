@@ -61,10 +61,10 @@
                <DatePicker fx:id="emissao" promptText="Emissão" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                <DatePicker fx:id="vencimento" promptText="Vencimento" GridPane.columnIndex="2" GridPane.rowIndex="8" />
                <TextField fx:id="valorTotal" minWidth="100.0" promptText="Valor total" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-               <ComboBox fx:id="despesa" editable="true" prefHeight="25.0" prefWidth="253.0" promptText="Tipo de despesa" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" />
+               <ComboBox fx:id="despesa" editable="true" prefHeight="26.0" prefWidth="490.0" promptText="Tipo de despesa" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" />
                <TextField fx:id="codPessoaCedente" promptText="Cod. Pessoa" GridPane.rowIndex="2" />
                <TextField fx:id="codPessoaPagador" promptText="Cod. Pessoa" GridPane.rowIndex="4" />
-               <TextField fx:id="numFatura" promptText="No Fatura" GridPane.columnIndex="4" GridPane.rowIndex="8" />
+               <TextField fx:id="numFatura" promptText="Num Fatura" GridPane.columnIndex="4" GridPane.rowIndex="8" />
                <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
                <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
                <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
