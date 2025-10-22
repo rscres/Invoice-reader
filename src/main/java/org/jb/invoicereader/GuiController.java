@@ -76,12 +76,26 @@ public class GuiController {
                 .put("VENCIMENTO", String.valueOf(vencimento.getValue()))
                 .put("VALOR_TOTAL", valorTotal.getText())
                 .put("COD_PESSOA_CEDENTE", codPessoaCedente.getText())
-                .put("NUM_DOCUMENTO", numFatura.getText());
+                .put("NUM_DOCUMENTO", numFatura.getText())
+                .put("prjCod", projeto.getValue())
+                .put("priCod", codProcesso.getText())
+                .put("ctpCod", getCtpCod());
         try {
             new CreateExpense(data);
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Erro ao criar a despesa:\n" + e, ButtonType.OK);
         }
+    }
+
+    private String getCtpCod() {
+        String selectedDespesa = despesa.getValue();
+        String selectedProjeto = projeto.getValue();
+        for (String[] item : despesasList) {
+            if (item[0].equals(selectedDespesa) && item[1].equals(selectedProjeto)) {
+                return item[2];
+            }
+        }
+        return null;
     }
 
     @FXML
