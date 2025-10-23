@@ -157,4 +157,12 @@ public enum DbHandler {
         }
         return despesas;
     }
+
+    public String getEndCod(String pesCod) throws SQLException {
+        String sql = "SELECT endCod FROM pessoas WHERE pesCod = ?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, pesCod);
+        ResultSet rs = pstmt.executeQuery();
+        return rs.getString("endCod");
+    }
 }
