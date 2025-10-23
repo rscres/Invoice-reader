@@ -6,8 +6,8 @@ import tools.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
@@ -16,18 +16,59 @@ public class CreateExpense {
 
     public CreateExpense(ObjectNode data) throws IOException, InterruptedException {
         System.out.println(data);
-        String pgsCodSeq = addSP(data);
-        System.out.println(pgsCodSeq);
+//        String pgsCodSeq = addSP(data);
+        System.out.println("{\n" +
+                "    \"priCod\": " + data.get("priCod").asString() + ",\n" +
+                "    \"prjCod\": " + data.get("prjCod").asString() + ",\n" +
+                "    \"ctpCod\": " + data.get("ctpCod").asString() + ",\n" +
+                "    \"vldStatus\": 2,\n" +
+                "    \"pgsMnyMneg\": " + data.get("VALOR_TOTAL").asString() + ",\n" +
+                "    \"pgsMnyMnac\": " + data.get("VALOR_TOTAL").asString() + ",\n" +
+                "    \"moeCod\": 790,\n" +
+                "    \"pgsFltTaxa\": 1,\n" +
+                "    \"pgsDtaVcto\": " + convertDate(data.get("VENCIMENTO").asString()) + "\n" +
+                "}");
+        String pgsCodSeq = "3";
+        System.out.println("{\n" +
+            "    \"priCod\": " + data.get("priCod").asString() + ",\n" +
+                    "    \"docVldTipo\": 9,\n" +
+                    "    \"gcdCod\": 80,\n" +
+                    "    \"frontModelName\": \"gerConfiguraDoc\",\n" +
+                    "    \"pesCod\": " + data.get("COD_PESSOA_CEDENTE") + ",\n" +
+                    "    \"endCod\": " + data.get("endCod") + ",\n" +
+                    "    \"gcdDesNome\": \"DESPESAS RECIBO IMPORTAÇÃO - PRÓPRIO\",\n" +
+                    "    \"docDtaEntrada\": " + LocalDate.now().atStartOfDay(ZoneId.of("America/Sao_Paulo")).toInstant().toEpochMilli() + ",\n" +
+                    "    \"dtaEmissao\": " + convertDate(data.get("EMISSAO").asString()) + ",\n" +
+                    "    \"dtaValidade\": " + convertDate(data.get("VENCIMENTO").asString()) + ",\n" +
+                    "    \"pdcDocFederal\": \"" + data.get("CNPJ").asString().replaceAll("[^a-zA-Z0-9]", "") + "\",\n" +
+                    "    \"items\": [\n" +
+                    "        {\n" +
+                    "            \"pgsCodSeq\": " + pgsCodSeq + "\n" +
+                    "        }\n" +
+                    "    ]\n" +
+                    "}");
+    }
+
+    private void checkMandatoryFields(ObjectNode data) {
+        try {
+            data.get("VALOR_TOTAL").asString();
+            data.get("priCod").asString();
+            data.get("COD_PESSOA_CEDENTE");
+            data.get("endCod");
+            data.get("CNPJ").asString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String addSP(ObjectNode data) throws IOException, InterruptedException {
         HttpResponse<String> response = conexosApi.PostRequest("imp021/processoSp", "{\n" +
-                "    \"priCod\": " + data.get("priCod") + ",\n" +
-                "    \"prjCod\": " + data.get("prjCod") + ",\n" +
-                "    \"ctpCod\": " + data.get("ctpCod") + ",\n" +
+                "    \"priCod\": " + data.get("priCod").asString() + ",\n" +
+                "    \"prjCod\": " + data.get("prjCod").asString() + ",\n" +
+                "    \"ctpCod\": " + data.get("ctpCod").asString() + ",\n" +
                 "    \"vldStatus\": 2,\n" +
-                "    \"pgsMnyMneg\": " + data.get("VALOR_TOTAL") + ",\n" +
-                "    \"pgsMnyMnac\": " + data.get("VALOR_TOTAL") + ",\n" +
+                "    \"pgsMnyMneg\": " + data.get("VALOR_TOTAL").asString() + ",\n" +
+                "    \"pgsMnyMnac\": " + data.get("VALOR_TOTAL").asString() + ",\n" +
                 "    \"moeCod\": 790,\n" +
                 "    \"pgsFltTaxa\": 1,\n" +
                 "    \"pgsDtaVcto\": " + convertDate(data.get("VENCIMENTO").asString()) + "\n" +
@@ -38,12 +79,10 @@ public class CreateExpense {
         JsonNode responseData = mapper.readTree(response.body());
 
         return responseData.get("pgsCodSeq").asString();
-//        convertDate(data.get("VENCIMENTO").textValue());
-//        return null;
     }
 
     private long convertDate(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("\"yyyy-MM-dd\"");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         System.out.println(date);
         LocalDate localDate = LocalDate.parse(date, formatter);
         long epoch = localDate.atStartOfDay(ZoneId.of("America/Sao_Paulo")).toInstant().toEpochMilli();
@@ -51,28 +90,27 @@ public class CreateExpense {
         return epoch;
     }
 
-//
-//    private boolean generateSP() throws IOException, InterruptedException {
-//        HttpResponse<String> response = conexosApi.PostRequest("imp021/processoSp/btConfirmarGerarSp", "{\n" +
-//                "    \"priCod\": 7844,\n" +
-//                "    \"docVldTipo\": 9,\n" +
-//                "    \"gcdCod\": 80,\n" +
-//                "    \"frontModelName\": \"gerConfiguraDoc\",\n" +
-//                "    \"pesCod\": " + pesCod + ",\n" +
-//                "    \"endCod\": " + endCod + ",\n" +
-//                "    \"gcdDesNome\": \"DESPESAS RECIBO IMPORTAÇÃO - PRÓPRIO\",\n" +
-//                "    \"docDtaEntrada\": " + entrada + ",\n" +
-//                "    \"dtaEmissao\": " + emissao + ",\n" +
-//                "    \"dtaValidade\": " + vencimento + ",\n" +
-//                "    \"pdcDocFederal\": \"" + cnpj + "\",\n" +
-//                "    \"items\": [\n" +
-//                "        {\n" +
-//                "            \"pgsCodSeq\": " + pgsCodSeq + "\n" +
-//                "        }\n" +
-//                "    ]\n" +
-//                "}");
-//        return true;
-//    }
+    private boolean generateSP(String pgsCodSeq, ObjectNode data) throws IOException, InterruptedException {
+        HttpResponse<String> response = conexosApi.PostRequest("imp021/processoSp/btConfirmarGerarSp", "{\n" +
+                "    \"priCod\": " + data.get("priCod").asString() + ",\n" +
+                "    \"docVldTipo\": 9,\n" +
+                "    \"gcdCod\": 80,\n" +
+                "    \"frontModelName\": \"gerConfiguraDoc\",\n" +
+                "    \"pesCod\": " + data.get("COD_PESSOA_CEDENTE").asString() + ",\n" +
+                "    \"endCod\": " + data.get("endCod").asString() + ",\n" +
+                "    \"gcdDesNome\": \"DESPESAS RECIBO IMPORTAÇÃO - PRÓPRIO\",\n" +
+                "    \"docDtaEntrada\": " + Instant.now().toEpochMilli() + ",\n" +
+                "    \"dtaEmissao\": " + convertDate(data.get("EMISSAO").asString()) + ",\n" +
+                "    \"dtaValidade\": " + convertDate(data.get("VENCIMENTO").asString()) + ",\n" +
+                "    \"pdcDocFederal\": \"" + data.get("CNPJ").asString().replaceAll("[^a-zA-Z0-9]", "") + "\",\n" +
+                "    \"items\": [\n" +
+                "        {\n" +
+                "            \"pgsCodSeq\": " + pgsCodSeq + "\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}");
+        return true;
+    }
 
     private boolean getAddressCode() {
         return true;

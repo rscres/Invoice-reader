@@ -64,11 +64,9 @@ public class DataProcessor {
         ObjectMapper mapper = new ObjectMapper();
         List<String> dataList = mapper.convertValue(data, new TypeReference<>() {});
         String value = null;
-        System.out.println("here");
         if (dataList.size() == 1 || dataList.stream().allMatch(element -> Objects.equals(dataList.getFirst(), element))) {
             value = dataList.getFirst();
         } else {
-            System.out.println("here2");
             Map<String, Integer> entryCount = new HashMap<>();
             for (int i = 0; i < dataList.size() - 1; i++) {
                 for (int j = i + 1; j < dataList.size(); j++) {
