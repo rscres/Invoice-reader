@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class GuiController {
     public TextField codProcesso;
@@ -47,6 +48,7 @@ public class GuiController {
         despesasList = null;
         try {
             despesasList = db.getDespesas();
+            despesasList.sort(Comparator.comparing(a -> a[0]));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
