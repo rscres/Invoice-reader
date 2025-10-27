@@ -1,5 +1,7 @@
 package org.jb.invoicereader;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
@@ -56,6 +58,14 @@ public class GuiController {
             despesa.getItems().add(row[0]);
         }
         projeto.getItems().addAll("1", "3", "4");
+
+        codPessoaCedente.textProperty().addListener((observableValue, s, t1) -> {
+            try {
+                pessoaCodFill();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @FXML
@@ -187,7 +197,7 @@ public class GuiController {
     void pessoaCodFill() throws SQLException {
         DbHandler db = DbHandler.getInstance();
         String pesCod = codPessoaCedente.getText();
-
+        System.out.println(pesCod);
         String[] data = db.getPessoaRow("pesCod", pesCod);
         cnpjCedente.setText(data[2]);
         cedente.setText(data[1]);
