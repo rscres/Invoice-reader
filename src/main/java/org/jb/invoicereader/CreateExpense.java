@@ -17,8 +17,9 @@ public class CreateExpense {
 
     public CreateExpense(ObjectNode data) throws Exception {
         DbHandler db = DbHandler.getInstance();
-        String endCod = db.getEndCod(data.get("COD_PESSOA_CEDENTE").asString());
         System.out.println(data);
+        String endCod = db.getEndCod(data.get("COD_PESSOA_CEDENTE").asString());
+        System.out.println("EndCod: " + endCod);
         if (endCod == null) throw new RuntimeException("Não foi possivel achar o endereço do cedente");
         data.put("endCod", endCod);
 
@@ -65,7 +66,8 @@ public class CreateExpense {
     }
 
     private void setEmptyDates(ObjectNode data) {
-        LocalDate date = LocalDate.ofEpochDay(LocalDate.now().atStartOfDay(ZoneId.of("GMT")).toInstant().toEpochMilli());
+        long date = LocalDate.now().atStartOfDay(ZoneId.of("GMT")).toInstant().toEpochMilli();
+        System.out.println(date);
         if (data.get("VENCIMENTO") == null) data.put("VENCIMENTO", String.valueOf(date));
         if (data.get("EMISSAO") == null) data.put("EMISSAO", String.valueOf(date));
     }
