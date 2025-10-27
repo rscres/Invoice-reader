@@ -70,6 +70,21 @@ public enum DbHandler {
         return null;
     }
 
+    public String[] getPessoaRow(String column, String value) throws SQLException {
+        String sql = "SELECT pesCod, descricao, docFederal WHERE ? = ?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, column);
+        pstmt.setString(2, value);
+        ResultSet rs = pstmt.executeQuery();
+        String[] data = new String[3];
+        if (rs.next()) {
+            data[0] = rs.getString("pesCod");
+            data[1] = rs.getString("descricao");
+            data[2] = rs.getString("docFederal");
+        }
+        return data;
+    }
+
     public void setPessoaRow(String key, String... data) throws SQLException {
         String sql = "INSERT OR IGNORE INTO pessoas (pesCod, descricao, endCod, docFederal, dtaValidade) VALUES (?,?,?,?,?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);

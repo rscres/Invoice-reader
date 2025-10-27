@@ -183,4 +183,13 @@ public class GuiController {
         text.setText(file.getAbsolutePath());
     }
 
+    @FXML
+    void pessoaCodFill() throws SQLException {
+        DbHandler db = DbHandler.getInstance();
+        String pesCod = codPessoaCedente.getText();
+
+        String[] data = db.getPessoaRow("pesCod", pesCod);
+        cnpjCedente.setText(data[2]);
+        cedente.setText(data[1]);
+    }
 }
