@@ -66,21 +66,24 @@
            </rowConstraints>
             <children>
                <TextField fx:id="codProcesso" promptText="Processo" />
-               <TextField fx:id="cedente" minWidth="200.0" prefHeight="25.0" prefWidth="296.0" promptText="Fornecedor" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="2" />
-               <TextField fx:id="cnpjCedente" minWidth="70.0" prefHeight="25.0" prefWidth="318.0" promptText="CNPJ" GridPane.columnIndex="6" GridPane.rowIndex="2" />
-               <TextField fx:id="pagador" minWidth="200.0" promptText="Pagador" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-               <TextField fx:id="cnpjPagador" minWidth="100.0" promptText="CNPJ" GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                <ChoiceBox fx:id="projeto" prefWidth="150.0" GridPane.columnIndex="2" onAction="#onProjetoSelection"/>
+               <ComboBox fx:id="despesa" editable="true" prefHeight="25.0" prefWidth="478.0" promptText="Tipo de despesa" GridPane.columnIndex="4" GridPane.columnSpan="2147483647" />
+                <TextField fx:id="codPessoaCedente" promptText="Cod. Pessoa" GridPane.rowIndex="2" />
+                <TextField fx:id="cedente" minWidth="200.0" prefHeight="25.0" prefWidth="296.0" promptText="Fornecedor" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                <TextField fx:id="cnpjCedente" minWidth="70.0" prefHeight="25.0" prefWidth="318.0" promptText="CNPJ" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                <TextField fx:id="codPessoaPagador" promptText="Cod. Pessoa" GridPane.rowIndex="4" />
+                <TextField fx:id="pagador" minWidth="200.0" promptText="Pagador" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+                <TextField fx:id="cnpjPagador" minWidth="100.0" promptText="CNPJ" GridPane.columnIndex="6" GridPane.rowIndex="4" />
                <DatePicker fx:id="emissao" promptText="Emissão" GridPane.columnIndex="4" GridPane.rowIndex="6" />
                <DatePicker fx:id="vencimento" promptText="Vencimento" GridPane.columnIndex="4" GridPane.rowIndex="8" />
                <TextField fx:id="valorTotal" minWidth="100.0" promptText="Valor total" GridPane.columnIndex="6" GridPane.rowIndex="6" />
-               <ComboBox fx:id="despesa" editable="true" prefHeight="25.0" prefWidth="478.0" promptText="Tipo de despesa" GridPane.columnIndex="4" GridPane.columnSpan="2147483647" />
-               <TextField fx:id="codPessoaCedente" promptText="Cod. Pessoa" GridPane.rowIndex="2" />
-               <TextField fx:id="codPessoaPagador" promptText="Cod. Pessoa" GridPane.rowIndex="4" />
+
+
                <TextField fx:id="numFatura" promptText="Num Fatura" GridPane.columnIndex="6" GridPane.rowIndex="8" />
                <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
                <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
                <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
-               <ChoiceBox fx:id="projeto" prefWidth="150.0" GridPane.columnIndex="2" onAction="#onProjetoSelection"/>
+
             </children>
          </GridPane>
           <Button fx:id="createButton" onAction="#onCreateButtonClick" text="Criar despesa" />
