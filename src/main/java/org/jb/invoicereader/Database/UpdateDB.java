@@ -75,7 +75,7 @@ public class UpdateDB {
                 String endCod = getEndCod(pesCod);
                 String docFederal = getDocFederal(pesCod);
                 String dtaValidade = String.valueOf(row.get("dpeDtaValidade"));
-                String descricao = String.valueOf(row.get("dpeNomFantasia"));
+                String descricao = String.valueOf(row.get("dpeNomFantasia")).replaceAll("\"","");
                 if (pesCod.isEmpty() || endCod == null || docFederal == null
                         || dtaValidade.isEmpty() || descricao.isEmpty()) continue;
                 db.setPessoaRow(pesCod, descricao, endCod, docFederal, dtaValidade);
