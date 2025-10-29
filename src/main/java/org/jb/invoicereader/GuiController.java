@@ -59,11 +59,21 @@ public class GuiController {
         }
         projeto.getItems().addAll("1", "3", "4");
 
-        codPessoaCedente.textProperty().addListener((observableValue, s, t1) -> {
-            try {
-                pessoaCodFill();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+//        codPessoaCedente.textProperty().addListener((observableValue, s, t1) -> {
+//            try {
+//                pessoaCodFill();
+//            } catch (SQLException e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
+
+        codPessoaCedente.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                try {
+                    pessoaCodFill();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
@@ -199,7 +209,19 @@ public class GuiController {
         String pesCod = codPessoaCedente.getText();
         System.out.println(pesCod);
         String[] data = db.getPessoaRow("pesCod", pesCod);
-        cnpjCedente.setText(data[2]);
-        cedente.setText(data[1]);
+        if (data[2].length() == 14) {
+            String cnpj = data[2].substring(0,2) + '.' + data[2].substring(2,5) + '.' + data[2].substring(5,8) + '/' + data[2].substring(8,12) + '-' + data[2].substring(12);
+            cnpjCedente.setText(cnpj);
+        } else if (data[2].length() == 11) {
+            String cpf = data[2].substring(0,3) + '.' + data[2].substring(3,6) + '.' + data[2].substring(6,9) + '-' + data[2].substring(9);
+            cnpjCedente.setText(cpf);
+        }
+
+        cedente.setText(data[1].replaceAll("\"", ""));
     }
+
+//    @FXML
+//    void filterDespesasList() {
+//        despesasList
+//    }
 }
