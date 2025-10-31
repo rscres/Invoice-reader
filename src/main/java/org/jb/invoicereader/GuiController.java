@@ -104,8 +104,9 @@ public class GuiController {
                 .put("ctpCod", getCtpCod());
         try {
             new CreateExpense(data);
+            new Alert(Alert.AlertType.NONE, "Despesa criada com sucesso", ButtonType.OK).showAndWait();
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, "Erro ao criar a despesa:\n" + e, ButtonType.OK);
+            new Alert(Alert.AlertType.ERROR, "Erro ao criar a despesa:\n" + e, ButtonType.OK).showAndWait();
         }
     }
 
@@ -128,7 +129,7 @@ public class GuiController {
             DataExtractor extractor = new DataExtractor(text.getText());
             setProcessedData(extractor.getProcessedData());
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, "Erro ao extrair os dados do pdf:\n" + e, ButtonType.OK);
+            new Alert(Alert.AlertType.ERROR, "Erro ao extrair os dados do pdf:\n" + e, ButtonType.OK).showAndWait();
         }
 
     }
