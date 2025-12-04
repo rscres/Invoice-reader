@@ -1,7 +1,5 @@
 package org.jb.invoicereader;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
@@ -12,10 +10,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.jb.invoicereader.DataHandlers.DataExtractor;
 import org.jb.invoicereader.Database.DbHandler;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.http.HttpResponse;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -59,19 +60,21 @@ public class GuiController {
         }
         projeto.getItems().addAll("1", "3", "4");
 
-//        codPessoaCedente.textProperty().addListener((observableValue, s, t1) -> {
-//            try {
-//                pessoaCodFill();
-//            } catch (SQLException e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
-
         codPessoaCedente.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 try {
                     pessoaCodFill();
                 } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        codProcesso.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                try {
+                    codProcessoFromRefExterna();
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -219,6 +222,37 @@ public class GuiController {
         }
 
         cedente.setText(data[1].replaceAll("\"", ""));
+    }
+
+    @FXML
+    void codProcessoFromRefExterna() throws IOException, InterruptedException { //refactor, extract api call to other class
+        String priCod = codProcesso.getText();
+        System.out.println(priCod);
+        if (priCod.contains("IMP") || priCod.contains("EXP")) {
+            System.out.println("Here");
+            HttpResponse<String> response = ConexosAPI.getInstance().PostRequest("imp021/list",
+                    "{\n" +
+                            "    \"fieldList\": [\n" +
+                            "        \"priCod\"\n" +
+                            "    ],\n" +
+                            "    \"filterList\": {\n" +
+                            "        \"priEspRefcliente#IN\": [\n" +
+                            "            \"" + priCod + "\"\n" +
+                            "        ]\n" +
+                            "    },\n" +
+                            "    \"pageNumber\": 1,\n" +
+                            "    \"pageSize\": 20\n" +
+                            "}");
+            if (response.statusCode() == 200) {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode responseData = mapper.readTree(response.body());
+                String newPriCod = responseData.get("rows").get(0).get("priCod").asString();
+                System.out.println(newPriCod);
+                codProcesso.setText(newPriCod);
+            } else {
+                System.out.println(response.body());
+            }
+        }
     }
 
 //    @FXML
